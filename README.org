@@ -4,15 +4,18 @@
 
  - [ ] automated creation of DocDB application including configured Apache and MySQL in Docker containers
  - [ ] isolation between generic code and application-specifics
-   - [ ] MySQL server separate from DB storage
-   - [ ] DocDB code separate from document storage
- - [ ] no stored authentication tokens 
+ - [ ] MySQL and Apache servers separate from DB and document storage
+ - [ ] no stored authentication tokens in the installation script
+ - [ ] retain connection to DocDB source for later update/development
 
 * Containers:
 
- - mysql :: runs the MySQL daemon
- - apache :: runs the Apache server
- - docdb :: runs an SSHd and provides MySQL and DocDB storage and initial setup script
+For any installations there are these /types/ of containers:
+
+ - daemons :: runs the MySQL, Apache and SSH daemons
+ - storage :: provides the MySQL and DocDB code and document storage (and an SSHd)
+
+Note: this bundling of all daemons into one image violates Docker best practices.  Maybe this will be refactored in the future.
 
 * Operation
 
@@ -24,15 +27,7 @@ To build the initial images:
   $ ./build.sh <namespace>
 #+END_EXAMPLE
 
-The =<namespace>= is used to allow for multiple DocDB's running on the same Docker host.  It produces images named:
-
-#+BEGIN_EXAMPLE
-<namespace>/mysql
-<namespace>/apache
-<namespace>/docdb
-#+END_EXAMPLE
-
-These correspond to the three containers to be run.
+The =<namespace>= is used to allow for multiple DocDB's running on the same Docker host.  It produces images named like =<namespace>/<type>= where =<type>= is =daemons= or =storage=.
 
 ** Running the containers
 
@@ -42,14 +37,9 @@ To start the containers run:
   $ ./start.sh <namespace>
 #+END_EXAMPLE
 
-The containers will be given the names:
+The containers will be given the =<namespace>_<type>=.
 
-#+BEGIN_EXAMPLE
-<namespace>_mysql
-<namespace>_apache
-<namespace>_docdb
-#+END_EXAMPLE
+The =daemons= container must be run with the =storage= container linked in.
 
-The primary container is the =docdb= one.  It provides storage for MySQL tables and the eventual DocDB documents.  This container gets linked (in the Docker sense) to both the =mysql= and the =apache= containers.
-
+Each time the =deamons= container is run it executes the script [[./docdb-storage/install_docdb.py]] provided by the =storage= image.  This script runs in an idempotent fashion so that changes are not overwritten.  It will warn if it detects such potential changes.  The results of a run is saved to an =installation.json= file in =/var/lib/docdb/installation= and if found it will be used to drive the next run.  
 

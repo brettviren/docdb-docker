@@ -29,4 +29,8 @@ echo "Please remember to change the above password as soon as possible!"
 echo "MySQL user 'root' has no password but only allows local connections"
 echo "========================================================================"
 
+echo "Installing DocDB"
+python /var/lib/docdb/installation/install_docdb.py ${DOCDB_INSTALL_CONFIG_FILE}
+
 mysqladmin -uroot shutdown
+

@@ -6,7 +6,7 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && \
   apt-get -y install supervisor git apache2 apache2-utils \
                      mysql-server mysql-client \
-		     openssh-server pwgen \
+		     pwgen \
                      libcgi-untaint-perl libxml-sax-perl libxml-perl \
 		     libxml-grove-perl libdatetime-perl libdigest-sha-perl libdigest-perl
 
@@ -14,10 +14,10 @@ RUN apt-get update && \
 # Supervirosd prep
 ADD supervisord-apache2.conf /etc/supervisor/conf.d/supervisord-apache2.conf
 ADD supervisord-mysqld.conf /etc/supervisor/conf.d/supervisord-mysqld.conf
-ADD supervisord-sshd.conf /etc/supervisor/conf.d/supervisord-sshd.conf
+#ADD supervisord-sshd.conf /etc/supervisor/conf.d/supervisord-sshd.conf
 ADD start-apache2.sh /start-apache2.sh
 ADD start-mysqld.sh /start-mysqld.sh
-ADD start-sshd.sh /start-sshd.sh
+#ADD start-sshd.sh /start-sshd.sh
 
 # Mysql prep
 ADD my.cnf /etc/mysql/conf.d/my.cnf
@@ -29,14 +29,12 @@ RUN a2enmod rewrite
 RUN a2enmod cgi
 
 # Main entry point
+ADD create_mysql_admin_user.sh /create_mysql_admin_user.sh
 ADD run.sh /run.sh
 RUN chmod 755 /*.sh
 
-# Add volumes 
-VOLUME  ["/etc/mysql", "/var/lib/mysql", "/var/lib/docdb", "/var/www/html" ]
-
 # Must be set at run time
-ENV AUTHORIZED_KEYS **None**
+# ENV AUTHORIZED_KEYS **None**
 
 EXPOSE 80
 CMD ["/run.sh"]

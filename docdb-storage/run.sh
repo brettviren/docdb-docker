@@ -23,10 +23,4 @@ if [ ! -f /.root_pw_set ]; then
 	/set_root_pw.sh
 fi
 
-# Do initial install of DocDB
-if [ ! -d /var/lib/docdb/htdocs ] ; then
-    /install_docdb.sh
-fi
-
-
 exec /usr/sbin/sshd -D
