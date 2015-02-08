@@ -1,0 +1,55 @@
+#+TITLE: DocDB in a Docker Container
+
+* Goals
+
+ - [ ] automated creation of DocDB application including configured Apache and MySQL in Docker containers
+ - [ ] isolation between generic code and application-specifics
+   - [ ] MySQL server separate from DB storage
+   - [ ] DocDB code separate from document storage
+ - [ ] no stored authentication tokens 
+
+* Containers:
+
+ - mysql :: runs the MySQL daemon
+ - apache :: runs the Apache server
+ - docdb :: runs an SSHd and provides MySQL and DocDB storage and initial setup script
+
+* Operation
+
+** Building images
+
+To build the initial images:
+
+#+BEGIN_EXAMPLE
+  $ ./build.sh <namespace>
+#+END_EXAMPLE
+
+The =<namespace>= is used to allow for multiple DocDB's running on the same Docker host.  It produces images named:
+
+#+BEGIN_EXAMPLE
+<namespace>/mysql
+<namespace>/apache
+<namespace>/docdb
+#+END_EXAMPLE
+
+These correspond to the three containers to be run.
+
+** Running the containers
+
+To start the containers run:
+
+#+BEGIN_EXAMPLE
+  $ ./start.sh <namespace>
+#+END_EXAMPLE
+
+The containers will be given the names:
+
+#+BEGIN_EXAMPLE
+<namespace>_mysql
+<namespace>_apache
+<namespace>_docdb
+#+END_EXAMPLE
+
+The primary container is the =docdb= one.  It provides storage for MySQL tables and the eventual DocDB documents.  This container gets linked (in the Docker sense) to both the =mysql= and the =apache= containers.
+
+
