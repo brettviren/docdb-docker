@@ -8,11 +8,9 @@
 
         ScriptAlias /cgi-bin/ {script_root}/
 
-        #Alias /DocDB/ {file_root}/
-
-
+	Alias /DocDB/ {file_root}/
         <Directory "{file_root}/">
-           Options ExecCGI SymLinksIfOwnerMatch
+           Options ExecCGI FollowSymLinks
            Order allow,deny
            Allow from all
            AuthType Basic

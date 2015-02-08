@@ -50,7 +50,7 @@ $cgi_path    = "/cgi-bin/%(cgi_base)s/"; # Used for cookies
 $DBWebMasterEmail = "%(admin_email)s";
 $DBWebMasterName  = "%(admin_name)s";
 
-$AuthUserFile     = "/full/path/to/.htpasswd";
+$AuthUserFile     = "{auth_file}";
 $MailServer       = "%(smtp_server)s";
 
 # Text customization. Leave $WelcomeMessage blank for no message on top of DB

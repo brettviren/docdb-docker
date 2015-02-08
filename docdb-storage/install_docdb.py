@@ -43,7 +43,7 @@ config = dict(
     script_root = env('script_root', os.path.join(env('root'), 'cgi-bin')),
     web_host = env('web_host', 'localhost'),
     web_base = env('web_base', 'DocDB'),
-    cgi_base = env('cgi_base', 'DocDB'),
+    cgi_base = env('cgi_base', 'private'),
     admin_email = env('admin_email','root@localhost'),
     admin_name = env('admin_name','root'),
     auth_file = env('auth_file', os.path.join(env('root'), 'passwords/htpasswd')),
@@ -52,7 +52,7 @@ config = dict(
     project_name = env('project_name', 'Document Database'),
     project_nick = env('project_nick', 'DocDB'),
 
-    giturl = env('giturl','https://github.com/ericvaandering/DocDB.git'),
+    giturl = env('giturl','https://github.com/brettviren/DocDB.git'),
     gittag = env('gittag'),
     srcdir = env('srcdir', os.path.join(env('root'), 'src')),
 
@@ -126,7 +126,7 @@ def configure_mysql():
     shell('mysql -uroot -hlocalhost < /tmp/mysql-init.sql')
 
     shell('mysql -u{db_admuser} -p{db_admpass} {db_name} < {sql}',
-          sql = os.path.join(thisdir,'CreateDatabase.SQL'))
+          sql=form('{srcdir}/DocDB/sql/CreateDatabase.SQL'))
     shell('mysql -u{db_admuser} -p{db_admpass} {db_name} < /tmp/mysql-secgrp.sql')
     
 

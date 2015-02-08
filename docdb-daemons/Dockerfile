@@ -7,7 +7,8 @@ RUN apt-get update && \
   apt-get -y install supervisor git apache2 apache2-utils \
                      mysql-server mysql-client \
 		     openssh-server pwgen \
-                     libcgi-untaint-perl libxml-sax-perl libxml-perl libxml-grove-perl
+                     libcgi-untaint-perl libxml-sax-perl libxml-perl \
+		     libxml-grove-perl libdatetime-perl libdigest-sha-perl libdigest-perl
 
 
 # Supervirosd prep
