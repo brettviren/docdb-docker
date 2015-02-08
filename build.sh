@@ -2,7 +2,7 @@
 
 namespace=$1 ; shift
 if [ -z "$namespace" ] ; then
-    echo "usage: install.sh <namespace>"
+    echo "usage: $0 <namespace>"
     exit 1
 fi
 
@@ -14,7 +14,8 @@ do_build_image () {
     docker build -t $fullname $srcdir/docdb-$name
 }
 
-do_build_image daemons
+#do_build_image daemons
+do_build_image mysql
 do_build_image storage
 
 

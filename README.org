@@ -1,5 +1,39 @@
 #+TITLE: DocDB in a Docker Container
 
+* All-in-one
+
+To start with, put everything in one container.
+
+#+BEGIN_EXAMPLE
+  $ git clone https://github.com/brettviren/docdb-docker.git
+  $ docker build -t test/aio docdb-docker/docdb-aio
+  $ docker run -p 127.0.0.1:2222:22 -p 127.0.0.1:8080:80 -d --name test_aio test/aio
+  $ ssh -p 2222 root@localhost  # (password is "root")
+
+  root@ea76164d6765:~# python /var/lib/docdb/installation/install-docdb.py 
+  ...
+  Info: shell: htpasswd -m -b /var/lib/docdb/passwords/htpasswd docdbadm enG0NAfPuJBd
+  Info: shell: htpasswd -m -b /var/lib/docdb/passwords/htpasswd docdbrw pkdXn3pjRtf1
+  ...
+  Info: installation data in /var/lib/docdb/installation/installation.json
+
+  root@ea76164d6765:~# supervisorctl restart apache2
+  root@ea76164d6765:~# exit
+  $ firefox http://localhost:8080/cgi-bin/private/DocumentDatabase
+#+END_EXAMPLE
+
+Notes:
+
+- Initial =root= password is =root=, beware der h@z0rs.
+- Web passwords are chosen randomly and displayed by the =install-docdb.py= script.
+- Full install parameters in the =installation.json= file.
+- Port mappings are saved on first run, so pick them as desired for eventual use.
+
+The installation needs MySQL running which is why you *must* log in to
+the container, run the installation and restart Apache manually each
+time you create such a container.
+
+
 * Goals
 
  - [ ] automated creation of DocDB application including configured Apache and MySQL in Docker containers
